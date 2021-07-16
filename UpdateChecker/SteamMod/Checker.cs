@@ -53,7 +53,8 @@ namespace UpdateChecker.SteamMod
             }
             _lastInfo = _mods;
             modWriter.writeModstoFile(_mods);
-            Thread.Sleep(3600*1000);
+            Console.WriteLine($"Last update: {DateTime.Now}");
+            Thread.Sleep(3600 * 1000);
             checkForUpdates();
         }
 

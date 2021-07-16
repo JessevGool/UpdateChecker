@@ -35,7 +35,6 @@ namespace UpdateChecker.Scraper
 
         public List<ModInfo> gatherModInfo()
         {
-            Console.WriteLine("STARTED SCRAPING");
             List<ModInfo> mods = new List<ModInfo>();
             if (_modIds != null)
             {
@@ -54,7 +53,7 @@ namespace UpdateChecker.Scraper
                 catch { }
                 if(t.Status == TaskStatus.RanToCompletion)
                 {
-                    Console.WriteLine("SCRAPING DONE");
+
                     return mods;
 
                 }
