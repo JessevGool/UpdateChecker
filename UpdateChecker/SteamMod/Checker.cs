@@ -48,6 +48,7 @@ namespace UpdateChecker.SteamMod
                     {
                         Console.WriteLine("---------");
                         Console.WriteLine($"-------{_mods[i]._modName} HAS BEEN UPDATED-------");
+                        Console.WriteLine($"-------ID: {_mods[i]._modId}");
                         Console.WriteLine($"-------{DateTime.Now.ToString()}-------");
                         Console.WriteLine("---------");
                     }
@@ -58,20 +59,6 @@ namespace UpdateChecker.SteamMod
             {
                 //Incase json isn't filled correctly
                 _lastInfo = _mods;
-                for (int i = 0; i < _mods.Count; i++)
-                {
-                    if (_mods[i]._modName == _lastInfo[i]._modName && _mods[i]._modId == _lastInfo[i]._modId && _mods[i]._lastUpdateTime == _lastInfo[i]._lastUpdateTime)
-                    {
-                    }
-                    else
-                    {
-                        Console.WriteLine("---------");
-                        Console.WriteLine($"-------{_mods[i]._modName} HAS BEEN UPDATED-------");
-                        Console.WriteLine($"-------{DateTime.Now.ToString()}-------");
-                        Console.WriteLine("---------");
-                    }
-
-                }
             }
             
             _lastInfo = _mods;
