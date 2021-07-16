@@ -9,6 +9,8 @@ namespace UpdateChecker.FileIO
 {
     class ModWriter
     {
+
+
         List<string> _modIds { get; set; }
         public ModWriter(List<string> modIds)
         {
@@ -22,7 +24,7 @@ namespace UpdateChecker.FileIO
         public List<string> readModIdsfromFile()
         {
             List<string> mods;
-            using (StreamReader file = File.OpenText(@"H:\Code\C#\JsonFiles\modids.txt"))
+            using (StreamReader file = File.OpenText($@"{getFullpath()}\modids.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 mods = (List<string>)serializer.Deserialize(file, typeof(List<string>));
@@ -33,26 +35,48 @@ namespace UpdateChecker.FileIO
 
         public List<ModInfo> readModsfromFile()
         {
-            List<ModInfo> mods;
-            using (StreamReader file = File.OpenText(@"H:\Code\C#\JsonFiles\mods.txt"))
+            try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                mods = (List<ModInfo>)serializer.Deserialize(file, typeof(List<ModInfo>));
+                List<ModInfo> mods;
+                using (StreamReader file = File.OpenText($@"{getFullpath()}\mods.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    mods = (List<ModInfo>)serializer.Deserialize(file, typeof(List<ModInfo>));
 
+                }
+                return mods;
             }
-            return mods;
+            catch(Exception e)
+            {
+                return new List<ModInfo>();
+            }
+           
         }
 
         public void writeModstoFile(List<ModInfo> mods)
         {
             string json = JsonConvert.SerializeObject(mods.ToArray());
-            System.IO.File.WriteAllText(@"H:\Code\C#\JsonFiles\mods.txt", json);
+            System.IO.File.WriteAllText($@"{getFullpath()}\mods.json", json);
         }
 
-        public void writeModstoFile()
+        public void writeModIdstoFile()
         {
             string json = JsonConvert.SerializeObject(_modIds.ToArray());
-            System.IO.File.WriteAllText(@"H:\Code\C#\JsonFiles\modids.txt", json);
+            System.IO.File.WriteAllText($@"{getFullpath()}\modids.json", json);
+        }
+
+        public string getFullpath()
+        {
+            var systemPath = System.Environment.
+                             GetFolderPath(
+                                 Environment.SpecialFolder.CommonApplicationData
+                             );
+            var complete = Path.Combine(systemPath, "UpdateChecker");
+            if(!Directory.Exists(complete))
+            {
+                Directory.CreateDirectory(complete);
+            }
+            return complete;
         }
     }
 }
