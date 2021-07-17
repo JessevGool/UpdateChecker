@@ -63,9 +63,10 @@ namespace UpdateChecker.FileIO
         {
             string json = JsonConvert.SerializeObject(_modIds.ToArray());
             System.IO.File.WriteAllText($@"{getFullpath()}\modids.json", json);
+            
         }
 
-        public string getFullpath()
+        private string getFullpath()
         {
             var systemPath = System.Environment.
                              GetFolderPath(
@@ -77,6 +78,21 @@ namespace UpdateChecker.FileIO
                 Directory.CreateDirectory(complete);
             }
             return complete;
+        }
+
+        private string checkLogDirectory()
+        {
+            var complete = Path.Combine(getFullpath(), "UpdateLogs");
+            if (!Directory.Exists(complete))
+            {
+                Directory.CreateDirectory(complete);
+            }
+            return complete;
+        }
+        public void writetoLogFile(string logText,string fileName)
+        {
+            
+            System.IO.File.AppendAllText($@"{checkLogDirectory()}\{fileName}.txt", logText);
         }
     }
 }

@@ -17,6 +17,8 @@ namespace UpdateChecker.SteamMod
         SteamUpdateScraper scraper = new SteamUpdateScraper();
 
         ModWriter modWriter = new ModWriter();
+
+        int lastDay;
         public Checker()
         {
             ModWriter writer = new ModWriter();
@@ -35,24 +37,26 @@ namespace UpdateChecker.SteamMod
 
         private void checkForUpdates()
         {
+            DateTime currentDay = DateTime.Now;
             _mods = scraper.gatherModInfo();
             sortLists(_mods, _lastInfo);
             if(_mods.Count == _lastInfo.Count)
             {
                 for (int i = 0; i < _mods.Count; i++)
                 {
-                    if (_mods[i]._modName == _lastInfo[i]._modName && _mods[i]._modId == _lastInfo[i]._modId && _mods[i]._lastUpdateTime == _lastInfo[i]._lastUpdateTime)
-                    {
-                    }
-                    else
+                    if (_mods[i]._modName == _lastInfo[i]._modName && _mods[i]._modId == _lastInfo[i]._modId && _mods[i]._lastUpdateTime != _lastInfo[i]._lastUpdateTime)
                     {
                         Console.WriteLine("---------");
                         Console.WriteLine($"-------{_mods[i]._modName} HAS BEEN UPDATED-------");
                         Console.WriteLine($"-------ID: {_mods[i]._modId}");
-                        Console.WriteLine($"-------{DateTime.Now.ToString()}-------");
+                        Console.WriteLine($"-------{currentDay.ToString()}-------");
                         Console.WriteLine("---------");
+                        modWriter.writetoLogFile(
+                            $"MOD: {_mods[i]._modName} \n" +
+                            $"Updated at: {_mods[i]._lastUpdateTime} \n" +
+                            $"With ID: {_mods[i]._modId} \n\n",
+                            $"{currentDay.Day}-{currentDay.Month}-{currentDay.Year}");
                     }
-
                 }
             }
             else
@@ -64,7 +68,7 @@ namespace UpdateChecker.SteamMod
             _lastInfo = _mods;
             modWriter.writeModstoFile(_mods);
             Console.WriteLine($"Last update: {DateTime.Now}");
-            Thread.Sleep(3600 * 1000);
+            Thread.Sleep(1*60*1000);
             checkForUpdates();
         }
 
