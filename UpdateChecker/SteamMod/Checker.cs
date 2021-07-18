@@ -57,6 +57,10 @@ namespace UpdateChecker.SteamMod
                             $"With ID: {_mods[i]._modId} \n\n",
                             $"{currentDay.Day}-{currentDay.Month}-{currentDay.Year}");
                     }
+                    else if(_mods[i]._modName != _lastInfo[i]._modName && _lastInfo[i]._modName == "ERROR OCCURED")
+                    {
+                        Console.WriteLine($"Loading mod {_mods[i]._modName} succeeded");
+                    }
                 }
             }
             else

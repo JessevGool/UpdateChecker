@@ -78,11 +78,13 @@ namespace UpdateChecker.Scraper
         private ModInfo gatherInfo(string modId)
         {
             //TODO IMPLEMENT SMART WAY TO FIX THIS, ASNYC AWAIT
+            //Probable error cause is code continueing before page is loaded
             HtmlDocument doc = web.Load($"{workshopLink}{modId}");
             var headerNames = doc.DocumentNode.SelectNodes("//div[@class='detailsStatRight']");
             var titleName = doc.DocumentNode.SelectSingleNode("//div[@class='workshopItemTitle']");
             if (headerNames != null && titleName != null && headerNames.Count > 2)
             {
+                
                 ModInfo modInfo = new ModInfo(titleName.InnerText, modId, headerNames[2].InnerText);
                 return modInfo;
             }
@@ -94,6 +96,7 @@ namespace UpdateChecker.Scraper
             else
             {
                 ModInfo modInfo = new ModInfo("ERROR OCCURED", modId, "ERROR OCCURED");
+                Console.WriteLine($"Loading {modId} failed, please check if this error keeps occuring");
                 return modInfo;
             }
             
