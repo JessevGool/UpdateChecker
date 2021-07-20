@@ -17,8 +17,6 @@ namespace UpdateChecker.SteamMod
         SteamUpdateScraper scraper = new SteamUpdateScraper();
 
         ModWriter modWriter = new ModWriter();
-
-        int lastDay;
         public Checker()
         {
             ModWriter writer = new ModWriter();
@@ -27,6 +25,7 @@ namespace UpdateChecker.SteamMod
             _lastInfo = scraper.gatherModInfo();
             checkForUpdates();
         }
+
         public Checker(List<string> modIds)
         {
             _modIds = modIds;

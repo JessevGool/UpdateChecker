@@ -46,7 +46,7 @@ namespace UpdateChecker.FileIO
                 }
                 return mods;
             }
-            catch(Exception e)
+            catch
             {
                 return new List<ModInfo>();
             }
