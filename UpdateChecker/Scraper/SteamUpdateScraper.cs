@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using UpdateChecker.FileIO;
@@ -42,7 +43,8 @@ namespace UpdateChecker.Scraper
                 {
                     tasks.Add(Task.Run(() =>
                     {
-                        mods.Add(gatherInfo(mod));
+                        ModInfo tempMod = gatherInfo(mod).Result;
+                        mods.Add(tempMod);
                     }));
                 }
                 Task t = Task.WhenAll(tasks.ToArray());
@@ -75,11 +77,14 @@ namespace UpdateChecker.Scraper
             }
         }
 
-        private ModInfo gatherInfo(string modId)
+        private async Task<ModInfo> gatherInfo(string modId)
         {
             //TODO IMPLEMENT SMART WAY TO FIX THIS, ASNYC AWAIT
             //Probable error cause is code continueing before page is loaded
-            HtmlDocument doc = web.Load($"{workshopLink}{modId}");
+            HttpClient client = new HttpClient();
+            var html = await client.GetStringAsync($"{workshopLink}{modId}").ConfigureAwait(false);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
             var headerNames = doc.DocumentNode.SelectNodes("//div[@class='detailsStatRight']");
             var titleName = doc.DocumentNode.SelectSingleNode("//div[@class='workshopItemTitle']");
             if (headerNames != null && titleName != null && headerNames.Count > 2)
