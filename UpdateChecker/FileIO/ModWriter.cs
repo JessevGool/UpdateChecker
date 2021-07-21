@@ -24,12 +24,29 @@ namespace UpdateChecker.FileIO
 
         public List<string> readModIdsfromFile()
         {
-            List<string> mods;
-            using (StreamReader file = File.OpenText($@"{getFullpath()}\modids.json"))
+            List<string> mods = new List<string>();
+            if (File.Exists($@"{getFullpath()}\modids.json"))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                mods = (List<string>)serializer.Deserialize(file, typeof(List<string>));
+                using (StreamReader file = File.OpenText($@"{getFullpath()}\modids.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    mods = (List<string>)serializer.Deserialize(file, typeof(List<string>));
+                }
 
+            }
+            else
+            {
+                using (StreamWriter sw = File.CreateText($@"{getFullpath()}\modids.json"))
+                {
+                    string _json = JsonConvert.SerializeObject(new List<string> { "PUT", "IN", "THIS", "FORMAT" });
+                    sw.Write(_json);
+                    sw.Close();
+                }
+                Console.WriteLine(@$"File: {getFullpath()}\modids.json has been created");
+                Console.WriteLine("Put list of ModIds inside using JSON format");
+                Console.WriteLine("Application will close in 10 seconds");
+                Thread.Sleep(10000);
+                System.Environment.Exit(1);
             }
             return mods;
         }
@@ -58,7 +75,7 @@ namespace UpdateChecker.FileIO
         {
             List<string> mods = new List<string>();
             string htmlName = string.Empty;
-            if(File.Exists($@"{getFullpath()}\htmlStorage.json"))
+            if (File.Exists($@"{getFullpath()}\htmlStorage.json"))
             {
                 using (StreamReader file = File.OpenText($@"{getFullpath()}\htmlStorage.json"))
                 {
@@ -81,20 +98,23 @@ namespace UpdateChecker.FileIO
                         }
                     }
                 }
-               
+
             }
             else
             {
-                using( StreamWriter sw = File.CreateText($@"{getFullpath()}\htmlStorage.json"))
+                using (StreamWriter sw = File.CreateText($@"{getFullpath()}\htmlStorage.json"))
                 {
-                    string _json = JsonConvert.SerializeObject("INPUT HTML NAME HERE");
+                    string _json = JsonConvert.SerializeObject("PUT HTML HERE");
                     sw.Write(_json);
                     sw.Close();
                 }
                 Console.WriteLine(@$"File: {getFullpath()}\htmlStorage.json has been created");
                 Console.WriteLine("Put HTML in the same location and input html name inside of the json");
+                Console.WriteLine("Application will close in 10 seconds");
+                Thread.Sleep(10000);
+                System.Environment.Exit(1);
             }
-            
+
             return mods;
         }
 

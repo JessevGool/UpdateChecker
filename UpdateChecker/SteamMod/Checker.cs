@@ -32,17 +32,9 @@ namespace UpdateChecker.SteamMod
             checkForUpdates();
         }
 
-        public Checker(List<string> modIds, bool readFromJSON)
+        public Checker(List<string> modIds)
         {
-            if (readFromJSON)
-            {
-                _modIds = modWriter.readModIdsfromFile();
-            }
-            else
-            {
-                _modIds = modWriter.readModIdsfromHTML();
-            }
-            scraper._modIds = _modIds;
+            scraper._modIds = modIds;
             _lastInfo = modWriter.readModsfromFile();
             checkForUpdates();
         }
