@@ -25,7 +25,7 @@ namespace UpdateChecker.SteamMod
             }
             else
             {
-                _modIds = modWriter.readModIdsfromHTML("Arma 3 Preset Vindicta Minimal.html");
+                _modIds = modWriter.readModIdsfromHTML();
             }
             scraper._modIds = _modIds;
             _lastInfo = scraper.gatherModInfo();
@@ -40,7 +40,7 @@ namespace UpdateChecker.SteamMod
             }
             else
             {
-                _modIds = modWriter.readModIdsfromHTML("Arma 3 Preset Vindicta Minimal.html");
+                _modIds = modWriter.readModIdsfromHTML();
             }
             scraper._modIds = _modIds;
             _lastInfo = modWriter.readModsfromFile();

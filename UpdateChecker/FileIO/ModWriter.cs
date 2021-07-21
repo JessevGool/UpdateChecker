@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UpdateChecker.SteamMod;
 
 namespace UpdateChecker.FileIO
@@ -53,24 +54,47 @@ namespace UpdateChecker.FileIO
 
         }
 
-        public List<string> readModIdsfromHTML(string html)
+        public List<string> readModIdsfromHTML()
         {
             List<string> mods = new List<string>();
-            using (StreamReader file = File.OpenText($@"{getFullpath()}\{html}"))
+            string htmlName = string.Empty;
+            if(File.Exists($@"{getFullpath()}\htmlStorage.json"))
             {
-                HtmlDocument document = new HtmlDocument();
-                document.LoadHtml(file.ReadToEnd());
-                var modListClass = document.DocumentNode.SelectSingleNode("//div[@class='mod-list']");
-                var modContainers = modListClass.SelectNodes("//tr[@data-type='ModContainer']");
-
-                foreach (var container in modContainers)
+                using (StreamReader file = File.OpenText($@"{getFullpath()}\htmlStorage.json"))
                 {
-                    var id = container.InnerText.Split(new string[] { "http://steamcommunity.com/sharedfiles/filedetails/?id=" }, StringSplitOptions.None)[1];
-                    id = id.Replace("\r\n", "");
-                    id = id.Replace(" ", "");
-                    mods.Add(id);
+                    JsonSerializer serializer = new JsonSerializer();
+
+                    htmlName = (string)serializer.Deserialize(file, typeof(string));
+                    using (StreamReader _file = File.OpenText($@"{getFullpath()}\{htmlName}"))
+                    {
+                        HtmlDocument document = new HtmlDocument();
+                        document.LoadHtml(_file.ReadToEnd());
+                        var modListClass = document.DocumentNode.SelectSingleNode("//div[@class='mod-list']");
+                        var modContainers = modListClass.SelectNodes("//tr[@data-type='ModContainer']");
+
+                        foreach (var container in modContainers)
+                        {
+                            var id = container.InnerText.Split(new string[] { "http://steamcommunity.com/sharedfiles/filedetails/?id=" }, StringSplitOptions.None)[1];
+                            id = id.Replace("\r\n", "");
+                            id = id.Replace(" ", "");
+                            mods.Add(id);
+                        }
+                    }
                 }
+               
             }
+            else
+            {
+                using( StreamWriter sw = File.CreateText($@"{getFullpath()}\htmlStorage.json"))
+                {
+                    string _json = JsonConvert.SerializeObject("INPUT HTML NAME HERE");
+                    sw.Write(_json);
+                    sw.Close();
+                }
+                Console.WriteLine(@$"File: {getFullpath()}\htmlStorage.json has been created");
+                Console.WriteLine("Put HTML in the same location and input html name inside of the json");
+            }
+            
             return mods;
         }
 

@@ -10,7 +10,7 @@ namespace UpdateChecker
         //STANDARD MOD LINK https://steamcommunity.com/sharedfiles/filedetails/?id={MODID}
         static void Main(string[] args)
         {
-            Checker checker = new Checker(true);
+            Checker checker = new Checker(false);
             Console.ReadKey();
         }
     }
