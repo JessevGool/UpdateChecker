@@ -7,7 +7,7 @@ namespace UpdateChecker.SteamMod
     class ModInfo
     {
         public string _modName { get; set; }
-        public string _modId { get; set;  }
+        public string _modId { get; set; }
         public string _lastUpdateTime { get; set; }
 
         public ModInfo(string modName, string modId, string lastUpdateTime)

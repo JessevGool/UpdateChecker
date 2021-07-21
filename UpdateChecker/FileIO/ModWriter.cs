@@ -50,7 +50,7 @@ namespace UpdateChecker.FileIO
             {
                 return new List<ModInfo>();
             }
-           
+
         }
 
         public void writeModstoFile(List<ModInfo> mods)
@@ -65,7 +65,7 @@ namespace UpdateChecker.FileIO
             string json = JsonConvert.SerializeObject(_modIds.ToArray(),
                 Formatting.Indented);
             System.IO.File.WriteAllText($@"{getFullpath()}\modids.json", json);
-            
+
         }
 
         private string getFullpath()
@@ -75,7 +75,7 @@ namespace UpdateChecker.FileIO
                                  Environment.SpecialFolder.CommonApplicationData
                              );
             var complete = Path.Combine(systemPath, "UpdateChecker");
-            if(!Directory.Exists(complete))
+            if (!Directory.Exists(complete))
             {
                 Directory.CreateDirectory(complete);
             }
@@ -91,9 +91,9 @@ namespace UpdateChecker.FileIO
             }
             return complete;
         }
-        public void writetoLogFile(string logText,string fileName)
+        public void writetoLogFile(string logText, string fileName)
         {
-            
+
             System.IO.File.AppendAllText($@"{checkLogDirectory()}\{fileName}.txt", logText);
         }
     }

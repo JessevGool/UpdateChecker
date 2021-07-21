@@ -51,14 +51,14 @@ namespace UpdateChecker.Scraper
                     t.Wait();
                 }
                 catch { }
-                if(t.Status == TaskStatus.RanToCompletion)
+                if (t.Status == TaskStatus.RanToCompletion)
                 {
 
                     return mods;
 
                 }
             }
-            else 
+            else
             {
                 ModWriter modWriter = new ModWriter();
                 _modIds = modWriter.readModIdsfromFile();
@@ -84,11 +84,11 @@ namespace UpdateChecker.Scraper
             var titleName = doc.DocumentNode.SelectSingleNode("//div[@class='workshopItemTitle']");
             if (headerNames != null && titleName != null && headerNames.Count > 2)
             {
-                
+
                 ModInfo modInfo = new ModInfo(titleName.InnerText, modId, headerNames[2].InnerText);
                 return modInfo;
             }
-            else if(headerNames != null && titleName != null)
+            else if (headerNames != null && titleName != null)
             {
                 ModInfo modInfo = new ModInfo(titleName.InnerText, modId, "Has never been updated");
                 return modInfo;
@@ -99,7 +99,7 @@ namespace UpdateChecker.Scraper
                 Console.WriteLine($"Loading {modId} failed, please check if this error keeps occuring");
                 return modInfo;
             }
-            
+
         }
 
     }

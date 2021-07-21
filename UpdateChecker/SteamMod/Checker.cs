@@ -39,7 +39,7 @@ namespace UpdateChecker.SteamMod
             DateTime currentDay = DateTime.Now;
             _mods = scraper.gatherModInfo();
             sortLists(_mods, _lastInfo);
-            if(_mods.Count == _lastInfo.Count)
+            if (_mods.Count == _lastInfo.Count)
             {
                 for (int i = 0; i < _mods.Count; i++)
                 {
@@ -56,7 +56,7 @@ namespace UpdateChecker.SteamMod
                             $"With ID: {_mods[i]._modId} \n\n",
                             $"{currentDay.Day}-{currentDay.Month}-{currentDay.Year}");
                     }
-                    else if(_mods[i]._modName != _lastInfo[i]._modName && _lastInfo[i]._modName == "ERROR OCCURED")
+                    else if (_mods[i]._modName != _lastInfo[i]._modName && _lastInfo[i]._modName == "ERROR OCCURED")
                     {
                         Console.WriteLine($"Loading mod {_mods[i]._modName} succeeded");
                     }
@@ -67,11 +67,11 @@ namespace UpdateChecker.SteamMod
                 //Incase json isn't filled correctly
                 _lastInfo = _mods;
             }
-            
+
             _lastInfo = _mods;
             modWriter.writeModstoFile(_mods);
             Console.WriteLine($"Last update: {DateTime.Now}");
-            Thread.Sleep(5*60*1000);
+            Thread.Sleep(5 * 60 * 1000);
             checkForUpdates();
         }
 
