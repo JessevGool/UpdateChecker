@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UpdateChecker.SteamMod;
 
 namespace UpdateChecker.FileIO
@@ -51,6 +51,27 @@ namespace UpdateChecker.FileIO
                 return new List<ModInfo>();
             }
 
+        }
+
+        public List<string> readModIdsfromHTML(string html)
+        {
+            List<string> mods = new List<string>();
+            using (StreamReader file = File.OpenText($@"{getFullpath()}\{html}"))
+            {
+                HtmlDocument document = new HtmlDocument();
+                document.LoadHtml(file.ReadToEnd());
+                var modListClass = document.DocumentNode.SelectSingleNode("//div[@class='mod-list']");
+                var modContainers = modListClass.SelectNodes("//tr[@data-type='ModContainer']");
+
+                foreach (var container in modContainers)
+                {
+                    var id = container.InnerText.Split(new string[] { "http://steamcommunity.com/sharedfiles/filedetails/?id=" }, StringSplitOptions.None)[1];
+                    id = id.Replace("\r\n", "");
+                    id = id.Replace(" ", "");
+                    mods.Add(id);
+                }
+            }
+            return mods;
         }
 
         public void writeModstoFile(List<ModInfo> mods)

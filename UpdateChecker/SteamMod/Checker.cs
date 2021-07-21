@@ -17,18 +17,31 @@ namespace UpdateChecker.SteamMod
         SteamUpdateScraper scraper = new SteamUpdateScraper();
 
         ModWriter modWriter = new ModWriter();
-        public Checker()
+        public Checker(bool readFromJSON)
         {
-            ModWriter writer = new ModWriter();
-            _modIds = writer.readModIdsfromFile();
+            if (readFromJSON)
+            {
+                _modIds = modWriter.readModIdsfromFile();
+            }
+            else
+            {
+                _modIds = modWriter.readModIdsfromHTML("Arma 3 Preset Vindicta Minimal.html");
+            }
             scraper._modIds = _modIds;
             _lastInfo = scraper.gatherModInfo();
             checkForUpdates();
         }
 
-        public Checker(List<string> modIds)
+        public Checker(List<string> modIds, bool readFromJSON)
         {
-            _modIds = modIds;
+            if (readFromJSON)
+            {
+                _modIds = modWriter.readModIdsfromFile();
+            }
+            else
+            {
+                _modIds = modWriter.readModIdsfromHTML("Arma 3 Preset Vindicta Minimal.html");
+            }
             scraper._modIds = _modIds;
             _lastInfo = modWriter.readModsfromFile();
             checkForUpdates();
