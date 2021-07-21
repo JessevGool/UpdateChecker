@@ -55,13 +55,15 @@ namespace UpdateChecker.FileIO
 
         public void writeModstoFile(List<ModInfo> mods)
         {
-            string json = JsonConvert.SerializeObject(mods.ToArray());
+            string json = JsonConvert.SerializeObject(mods.ToArray(),
+                Formatting.Indented);
             System.IO.File.WriteAllText($@"{getFullpath()}\mods.json", json);
         }
 
         public void writeModIdstoFile()
         {
-            string json = JsonConvert.SerializeObject(_modIds.ToArray());
+            string json = JsonConvert.SerializeObject(_modIds.ToArray(),
+                Formatting.Indented);
             System.IO.File.WriteAllText($@"{getFullpath()}\modids.json", json);
             
         }
