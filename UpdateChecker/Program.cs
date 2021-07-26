@@ -7,9 +7,11 @@ namespace UpdateChecker
     class Program
     {
 
+
         //STANDARD MOD LINK https://steamcommunity.com/sharedfiles/filedetails/?id={MODID}
         static void Main(string[] args)
         {
+            Console.Title = "UpdateChecker";
             Console.WriteLine("Do you want to read from a preset?: Y/N");
 
             string  choice = Console.ReadLine();
