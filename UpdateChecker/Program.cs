@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using UpdateChecker.SteamMod;
 
 
@@ -11,6 +12,7 @@ namespace UpdateChecker
         //STANDARD MOD LINK https://steamcommunity.com/sharedfiles/filedetails/?id={MODID}
         static void Main(string[] args)
         {
+            SteamAPI.Init();
             Console.Title = "UpdateChecker";
             Console.WriteLine("Do you want to read from a preset?: Y/N");
 

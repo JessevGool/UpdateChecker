@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UpdateChecker.FileIO;
 using UpdateChecker.Scraper;
 
@@ -38,12 +40,35 @@ namespace UpdateChecker.SteamMod
             _lastInfo = modWriter.readModsfromFile();
             checkForUpdates();
         }
-
+        private void updateMods(List<uint> modsToUpdate)
+        {
+             List<Task> tasks = new List<Task>();
+            foreach (var mod in modsToUpdate)
+            {
+                tasks.Add(Task.Run(() =>
+                {
+                    PublishedFileId_t _mod;
+                    _mod.m_PublishedFileId = mod;
+                    var itemBool = SteamUGC.DownloadItem(_mod ,false);
+                }));
+                Task t = Task.WhenAll(tasks.ToArray());
+                try
+                {
+                    t.Wait();
+                }
+                catch { }
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    Console.WriteLine("MOD(S) were updated");
+                }
+            }
+        }
         private void checkForUpdates()
         {
             DateTime currentDay = DateTime.Now;
             _mods = scraper.gatherModInfo();
             sortLists(_mods, _lastInfo);
+            List<uint> modsToUpdate = new List<uint>();
             if (_mods.Count == _lastInfo.Count)
             {
                 for (int i = 0; i < _mods.Count; i++)
@@ -60,6 +85,7 @@ namespace UpdateChecker.SteamMod
                             $"Updated at: {_mods[i]._lastUpdateTime} \n" +
                             $"With ID: {_mods[i]._modId} \n\n",
                             $"{currentDay.Day}-{currentDay.Month}-{currentDay.Year}");
+                        modsToUpdate.Add(Convert.ToUInt32(_mods[i]._modId));
                     }
                     else if (_mods[i]._modName != _lastInfo[i]._modName && _lastInfo[i]._modName == "ERROR OCCURED")
                     {
@@ -75,6 +101,11 @@ namespace UpdateChecker.SteamMod
 
             _lastInfo = _mods;
             modWriter.writeModstoFile(_mods);
+            if(modsToUpdate.Count > 0)
+            {
+                updateMods(modsToUpdate);
+                modsToUpdate.Clear();
+            }
             Console.WriteLine($"Last update: {DateTime.Now}");
             Thread.Sleep(60 * 60 * 1000);
             checkForUpdates();
@@ -85,6 +116,8 @@ namespace UpdateChecker.SteamMod
             _mods = mods.OrderBy(mod => mod._modName).ToList();
             _lastInfo = lastInfo.OrderBy(mod => mod._modName).ToList();
         }
+
+        
     }
 }
 
