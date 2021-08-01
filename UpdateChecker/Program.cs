@@ -13,6 +13,7 @@ namespace UpdateChecker
         static void Main(string[] args)
         {
             SteamAPI.Init();
+            SteamAPI.RunCallbacks();
             Console.Title = "UpdateChecker";
             Console.WriteLine("Do you want to read from a preset?: Y/N");
 

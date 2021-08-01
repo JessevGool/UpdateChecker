@@ -18,6 +18,8 @@ namespace UpdateChecker.SteamMod
 
         SteamUpdateScraper scraper = new SteamUpdateScraper();
 
+        protected Callback<DownloadItemResult_t> m_DownloadItemResult;
+
         ModWriter modWriter = new ModWriter();
         public Checker(bool readFromJSON)
         {
@@ -50,6 +52,8 @@ namespace UpdateChecker.SteamMod
                     PublishedFileId_t _mod;
                     _mod.m_PublishedFileId = mod;
                     var itemBool = SteamUGC.DownloadItem(_mod ,false);
+                    m_DownloadItemResult = Callback<DownloadItemResult_t>.Create(OnDownloadItemResult);
+                    Console.WriteLine($"Download item bool: {itemBool}");
                 }));
                 Task t = Task.WhenAll(tasks.ToArray());
                 try
@@ -59,12 +63,15 @@ namespace UpdateChecker.SteamMod
                 catch { }
                 if (t.Status == TaskStatus.RanToCompletion)
                 {
+                    
                     Console.WriteLine("MOD(S) were updated");
+                    return;
                 }
             }
         }
         private void checkForUpdates()
         {
+            SteamAPI.RunCallbacks();
             DateTime currentDay = DateTime.Now;
             _mods = scraper.gatherModInfo();
             sortLists(_mods, _lastInfo);
@@ -103,6 +110,7 @@ namespace UpdateChecker.SteamMod
             modWriter.writeModstoFile(_mods);
             if(modsToUpdate.Count > 0)
             {
+                SteamAPI.RunCallbacks();
                 updateMods(modsToUpdate);
                 modsToUpdate.Clear();
             }
@@ -117,7 +125,10 @@ namespace UpdateChecker.SteamMod
             _lastInfo = lastInfo.OrderBy(mod => mod._modName).ToList();
         }
 
-        
+        void OnDownloadItemResult(DownloadItemResult_t pCallback)
+        {
+           Console.WriteLine("[" + DownloadItemResult_t.k_iCallback + " - DownloadItemResult] - " + pCallback.m_unAppID + " -- " + pCallback.m_nPublishedFileId + " -- " + pCallback.m_eResult);
+        }
     }
 }
 
